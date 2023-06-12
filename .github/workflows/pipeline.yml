@@ -29,11 +29,12 @@ jobs:
           echo $API_CHANGED_FILES
           echo "API_CHANGED=true"
           echo "API_CHANGED=true" >> $GITHUB_OUTPUT
+          echo "###"
         else
           echo "API_CHANGED=false"
           echo "API_CHANGED=false" >> $GITHUB_OUTPUT
         fi
-        echo ''
+        echo '---'
         CLIENT_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'client/*' | wc -l)
         echo "$CLIENT_CHANGED_FILES Client files changed:"
         if [[ $CLIENT_CHANGED_FILES -gt 0 ]]; then
