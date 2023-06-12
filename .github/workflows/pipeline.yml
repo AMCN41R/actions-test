@@ -17,7 +17,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: test
-      run: ./scripts/test.sh
+      run: .github/workflows/scripts/test.sh
       shell: bash
     - name: Detect changes
       id: detect-changes-script
