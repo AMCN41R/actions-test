@@ -25,23 +25,23 @@ jobs:
         echo ''
         API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l)
         echo "$API_CHANGED_FILES API files changed:"
-        if [[ $API_CHANGED_FILES -gt 0 ]]; then
-          echo $API_CHANGED_FILES
-          echo "API_CHANGED=true"
-          echo "API_CHANGED=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "API_CHANGED=false"
-        fi
-        echo ''
-        CLIENT_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'client/*' | wc -l)
-        echo "$CLIENT_CHANGED_FILES Client files changed:"
-        if [[ $CLIENT_CHANGED_FILES -gt 0 ]]; then
-          echo $CLIENT_CHANGED_FILES
-          echo "CLIENT_CHANGED=true"
-          echo "CLIENT_CHANGED=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "CLIENT_CHANGED=false"
-        fi
+        # if [[ $API_CHANGED_FILES -gt 0 ]]; then
+        #   echo $API_CHANGED_FILES
+        #   echo "API_CHANGED=true"
+        #   echo "API_CHANGED=true" >> "$GITHUB_OUTPUT"
+        # else
+        #   echo "API_CHANGED=false"
+        # fi
+        # echo ''
+        # CLIENT_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'client/*' | wc -l)
+        # echo "$CLIENT_CHANGED_FILES Client files changed:"
+        # if [[ $CLIENT_CHANGED_FILES -gt 0 ]]; then
+        #   echo $CLIENT_CHANGED_FILES
+        #   echo "CLIENT_CHANGED=true"
+        #   echo "CLIENT_CHANGED=true" >> "$GITHUB_OUTPUT"
+        # else
+        #   echo "CLIENT_CHANGED=false"
+        # fi
 
   build_api:
     runs-on: ubuntu-latest
