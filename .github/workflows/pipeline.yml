@@ -1,0 +1,61 @@
+
+name: pipeline
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      API_CHANGED: ${{ steps.detect-changes-script.outputs.API_CHANGED }}
+      CLIENT_CHANGED: ${{ steps.detect-changes-script.outputs.CLIENT_CHANGED }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Detect changes
+      id: detect-changes-script
+      shell: bash
+      run: |
+        echo 'detecting changes...'
+        echo ''
+        API_CHANGED_FILES=( $(git diff --name-only HEAD HEAD^ | grep 'api/*') )
+        echo ${#API_CHANGED_FILES[@]} API files changed:
+        if [ ${#API_CHANGED_FILES[@]} -gt 0 ]
+        then
+          echo $API_CHANGED_FILES
+          echo "API_CHANGED=true"
+          echo "API_CHANGED=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "API_CHANGED=false"
+        fi
+        echo ''
+        CLIENT_CHANGED_FILES=( $(git diff --name-only HEAD HEAD^ | grep 'client/*') )
+        echo ${#CLIENT_CHANGED_FILES[@]} Client files changed:
+        if [ ${#CLIENT_CHANGED_FILES[@]} -gt 0 ]
+        then
+          echo $CLIENT_CHANGED_FILES
+          echo "CLIENT_CHANGED=true"
+          echo "CLIENT_CHANGED=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "CLIENT_CHANGED=false"
+        fi
+
+  build_api:
+    runs-on: ubuntu-latest
+    needs: [detect_changes]
+    if: needs.detect_changes.outputs.API_CHANGED == 'true'
+    steps:
+    - name: api
+      run: echo "api building
+
+  build_client:
+    runs-on: ubuntu-latest
+    needs: [detect_changes]
+    if: needs.detect_changes.outputs.CLIENT_CHANGED == 'true'
+    steps:
+    - name: client
+      run: echo "client building"
