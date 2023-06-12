@@ -36,6 +36,14 @@ jobs:
         echo "CLIENT_CHANGED: $clientChanged"
         echo "CLIENT_CHANGED=$clientChanged" >> $GITHUB_OUTPUT
 
+  ops:
+    runs-on: ubuntu-latest
+    needs: [detect_changes]
+    steps:
+    - run: |
+        echo ${{needs.detect_changes.outputs.API_CHANGED}}
+        echo ${{needs.detect_changes.outputs.CLIENT_CHANGED}}
+  
   build_api:
     runs-on: ubuntu-latest
     needs: [detect_changes]
