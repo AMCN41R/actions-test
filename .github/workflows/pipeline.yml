@@ -16,6 +16,9 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - name: test
+      run: ./scripts/test.sh
+      shell: bash
     - name: Detect changes
       id: detect-changes-script
       shell: pwsh
