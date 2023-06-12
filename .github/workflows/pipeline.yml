@@ -23,7 +23,9 @@ jobs:
         echo 'detecting changes...'
         echo ''
         API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l)
+        CLIENT_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'client/*' | wc -l)
         echo "$API_CHANGED_FILES API files changed:"
+        echo "$CLIENT_CHANGED_FILES Client files changed:"
 
         if [[ $API_CHANGED_FILES -gt 0 ]]; then
           echo $API_CHANGED_FILES
@@ -35,8 +37,7 @@ jobs:
           echo "API_CHANGED=false" >> $GITHUB_OUTPUT
         fi
         echo '---'
-        CLIENT_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'client/*' | wc -l)
-        echo "$CLIENT_CHANGED_FILES Client files changed:"
+
         if [[ $CLIENT_CHANGED_FILES -gt 0 ]]; then
           echo $CLIENT_CHANGED_FILES
           echo "CLIENT_CHANGED=true"
