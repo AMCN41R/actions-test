@@ -10,18 +10,20 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     outputs:
-      myoutput: ${{ steps.step1.outputs.myoutput }}
+      myoutput: ${{ steps.step_three.outputs.myoutput }}
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - name: set output
-      id: step1
+    - name: Set the value
+      id: step_one
       run: |
-        echo 'detecting changes...'
-        echo ''
-        API_CHANGED_FILES=( $(git diff --name-only HEAD HEAD^ | grep 'api/*') )
-        echo ${#API_CHANGED_FILES[@]} API files changed:
+        echo "action_state=yellow" >> $GITHUB_ENV
+    - name: Use the value
+      id: step_two
+      run: |
+        echo "${{ env.action_state }}"
+    - name: set output
+      id: step_three
+      run: |
+        echo "myoutput='${{ env.action_state }}'" >> $GITHUB_OUTPUT
         
   job2:
     runs-on: ubuntu-latest
