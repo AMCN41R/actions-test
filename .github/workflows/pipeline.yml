@@ -21,8 +21,8 @@ jobs:
       shell: bash
       run: |
         echo 'detecting changes...'
-        #echo ''
-        #API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l)
+        echo ''
+        API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l)
         echo "$API_CHANGED_FILES API files changed:"
 
   build_api:
