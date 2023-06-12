@@ -39,7 +39,6 @@ jobs:
         echo ''
 
         if [[ $CLIENT_CHANGED_FILES -gt 0 ]]; then
-          echo $CLIENT_CHANGED_FILES
           echo "CLIENT_CHANGED=true"
           echo "CLIENT_CHANGED=true" >> $GITHUB_OUTPUT
         else
