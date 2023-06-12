@@ -23,10 +23,10 @@ jobs:
         echo 'detecting changes...'
         echo ''
         echo "testing for api changes"
-        API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l)
+        API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ || true | grep 'api/*' | wc -l)
         echo $?
         echo "testing for client changes"
-        CLIENT_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'client/*' | wc -l)
+        CLIENT_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ || true | grep 'client/*' | wc -l)
         echo $?
         echo "$API_CHANGED_FILES API files changed:"
         echo "$CLIENT_CHANGED_FILES Client files changed:"
