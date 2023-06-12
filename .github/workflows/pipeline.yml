@@ -14,6 +14,7 @@ jobs:
     steps:
     - name: set output
       id: step1
+      shell: pwsh
       run: |
         echo "myoutput='hello world'" >> $GITHUB_OUTPUT
 
