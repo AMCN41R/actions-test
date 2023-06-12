@@ -22,9 +22,9 @@ jobs:
       run: |
         git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l
         echo 'detecting changes...'
-        echo ''
-        API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l)
-        echo "$API_CHANGED_FILES API files changed:"
+        #echo ''
+        #API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l)
+        #echo "$API_CHANGED_FILES API files changed:"
         # if [[ $API_CHANGED_FILES -gt 0 ]]; then
         #   echo $API_CHANGED_FILES
         #   echo "API_CHANGED=true"
