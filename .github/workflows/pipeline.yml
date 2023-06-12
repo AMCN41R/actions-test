@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Set the value
       id: step_one
-      shell: pwsh
+      shell: bash
       run: |
         echo "action_state=yellow" >> $GITHUB_ENV
     - name: Use the value
