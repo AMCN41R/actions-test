@@ -18,31 +18,23 @@ jobs:
         fetch-depth: 0
     - name: Detect changes
       id: detect-changes-script
-      shell: bash
+      shell: pwsh
       run: |
-        echo 'detecting changes...'
-        echo ''
-        API_CHANGED_FILES=( $(git diff --name-only HEAD HEAD^ | grep 'api/*') )
-        echo ${#API_CHANGED_FILES[@]} API files changed:
-        if [ ${#API_CHANGED_FILES[@]} -gt 0 ]
-        then
-          echo $API_CHANGED_FILES
-          echo "API_CHANGED=true"
-          echo "API_CHANGED=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "API_CHANGED=false"
-        fi
-        echo ''
-        CLIENT_CHANGED_FILES=( $(git diff --name-only HEAD HEAD^ | grep 'client/*') )
-        echo ${#CLIENT_CHANGED_FILES[@]} Client files changed:
-        if [ ${#CLIENT_CHANGED_FILES[@]} -gt 0 ]
-        then
-          echo $CLIENT_CHANGED_FILES
-          echo "CLIENT_CHANGED=true"
-          echo "CLIENT_CHANGED=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "CLIENT_CHANGED=false"
-        fi
+        # Get any changed files
+        $changedFiles = git diff --name-status HEAD HEAD^
+        echo $changedFiles
+
+        # Return $true if api/ path is in the list of changed files, otherwise $false
+        $apiChanged = ((Select-String -InputObject $changedFiles -Pattern "api/" -AllMatches).Matches.Count -gt 0)
+
+        # Return $true if client/ path is in the list of changed files, otherwise $false
+        $clientChanged = ((Select-String -InputObject $changedFiles -Pattern "client/" -AllMatches).Matches.Count -gt 0)
+
+        # Set variables for use later
+        echo "API_CHANGED: $apiChanged"
+        echo "API_CHANGED=$apiChanged" >> "$GITHUB_OUTPUT"
+        echo "CLIENT_CHANGED: $clientChanged"
+        echo "CLIENT_CHANGED=$clientChanged" >> "$GITHUB_OUTPUT"
 
   build_api:
     runs-on: ubuntu-latest
