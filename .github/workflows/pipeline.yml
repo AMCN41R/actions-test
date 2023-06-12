@@ -7,55 +7,20 @@ on:
     - main
 
 jobs:
-  detect_changes:
+  job1:
     runs-on: ubuntu-latest
     outputs:
-      API_CHANGED: ${{ steps.detect-changes-script.outputs.API_CHANGED }}
-      CLIENT_CHANGED: ${{ steps.detect-changes-script.outputs.CLIENT_CHANGED }}
+      myoutput: ${{ steps.step1.outputs.myoutput }}
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - name: Detect changes
-      id: detect-changes-script
-      shell: pwsh
+    - name: set output
+      id: step1
       run: |
-        # Get any changed files
-        $changedFiles = git diff --name-status HEAD HEAD^
-        echo $changedFiles
+        echo "myoutput='hello world'" >> $GITHUB_OUTPUT
 
-        # Return $true if api/ path is in the list of changed files, otherwise $false
-        $apiChanged = ((Select-String -InputObject $changedFiles -Pattern "api/" -AllMatches).Matches.Count -gt 0)
-
-        # Return $true if client/ path is in the list of changed files, otherwise $false
-        $clientChanged = ((Select-String -InputObject $changedFiles -Pattern "client/" -AllMatches).Matches.Count -gt 0)
-
-        # Set variables for use later
-        echo "API_CHANGED: $apiChanged"
-        echo "API_CHANGED='123'" >> $GITHUB_OUTPUT
-        echo "CLIENT_CHANGED: $clientChanged"
-        echo "CLIENT_CHANGED=$clientChanged" >> $GITHUB_OUTPUT
-
-  ops:
+  job2:
     runs-on: ubuntu-latest
-    needs: [detect_changes]
+    needs: job1
     steps:
-    - run: |
-        echo ${{needs.detect_changes.outputs.API_CHANGED}}
-        echo ${{needs.detect_changes.outputs.CLIENT_CHANGED}}
-  
-  build_api:
-    runs-on: ubuntu-latest
-    needs: [detect_changes]
-    if: needs.detect_changes.outputs.API_CHANGED == 'True'
-    steps:
-    - name: api
-      run: echo "api building
-
-  build_client:
-    runs-on: ubuntu-latest
-    needs: [detect_changes]
-    if: needs.detect_changes.outputs.CLIENT_CHANGED == 'True'
-    steps:
-    - name: client
-      run: echo "client building"
+    - name: retrieve output
+      run: |
+        echo ${{ needs.job1.outputs.myoutput }}
