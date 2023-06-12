@@ -32,7 +32,7 @@ jobs:
 
         # Set variables for use later
         echo "API_CHANGED: $apiChanged"
-        echo "API_CHANGED=123" >> $GITHUB_OUTPUT
+        echo "API_CHANGED='123'" >> $GITHUB_OUTPUT
         echo "CLIENT_CHANGED: $clientChanged"
         echo "CLIENT_CHANGED=$clientChanged" >> $GITHUB_OUTPUT
 
