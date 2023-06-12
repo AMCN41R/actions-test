@@ -7,31 +7,48 @@ on:
     - main
 
 jobs:
-  job1:
+  detect_changes:
     runs-on: ubuntu-latest
     outputs:
-      myoutput: ${{ steps.step_three.outputs.myoutput }}
+      API_CHANGED: ${{ steps.detect-changes-script.outputs.API_CHANGED }}
+      CLIENT_CHANGED: ${{ steps.detect-changes-script.outputs.CLIENT_CHANGED }}
     steps:
-    - name: Set the value
-      id: step_one
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Detect changes
+      id: detect-changes-script
       shell: pwsh
       run: |
-        echo "action_state=yellow" >> $env:GITHUB_ENV
-    - name: Use the value
-      id: step_two
-      shell: pwsh
-      run: |
-        echo "${{ env.action_state }}"
-    - name: set output
-      id: step_three
-      shell: pwsh
-      run: |
-        echo "myoutput='${{ env.action_state }}'" >> $env:GITHUB_OUTPUT
-        
-  job2:
+        # Get any changed files
+        $changedFiles = git diff --name-status HEAD HEAD^
+        echo $changedFiles
+
+        # Return $true if api/ path is in the list of changed files, otherwise $false
+        $apiChanged = ((Select-String -InputObject $changedFiles -Pattern "api/" -AllMatches).Matches.Count -gt 0)
+
+        # Return $true if client/ path is in the list of changed files, otherwise $false
+        $clientChanged = ((Select-String -InputObject $changedFiles -Pattern "client/" -AllMatches).Matches.Count -gt 0)
+
+        # Set variables for use later
+        echo "API_CHANGED: $apiChanged"
+        echo "API_CHANGED=$apiChanged" >> "$env:GITHUB_OUTPUT"
+        echo "CLIENT_CHANGED: $clientChanged"
+        echo "CLIENT_CHANGED=$clientChanged" >> "$env:GITHUB_OUTPUT"
+
+  build_api:
     runs-on: ubuntu-latest
-    needs: job1
+    needs: [detect_changes]
+    if: needs.detect_changes.outputs.API_CHANGED == 'True'
     steps:
-    - name: retrieve output
-      run: |
-        echo ${{ needs.job1.outputs.myoutput }}
+    - name: client
+      run: echo "api build"
+
+  build_client:
+    runs-on: ubuntu-latest
+    needs: [detect_changes]
+    if: needs.detect_changes.outputs.CLIENT_CHANGED == 'True'
+    steps:
+    - name: client
+      run: echo "client build"
+      
