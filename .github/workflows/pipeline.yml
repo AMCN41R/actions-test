@@ -20,6 +20,7 @@ jobs:
       id: detect-changes-script
       shell: bash
       run: |
+        git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l
         echo 'detecting changes...'
         echo ''
         API_CHANGED_FILES=$(git diff --name-only HEAD HEAD^ | grep 'api/*' | wc -l)
